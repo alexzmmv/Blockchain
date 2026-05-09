@@ -177,15 +177,18 @@ describe("ZombieHelper", function () {
     });
 
     it("Should return multiple zombies if owner has many", async function () {
-      // Create more zombies through feeding (after cooldown)
-      const MockKitty = await ethers.getContractFactory("MockCryptoKitties");
-      const mockKittyContract = await MockKitty.deploy() as unknown as MockCryptoKitties;
-      await zombieOwnership.setKittyContractAddress(await mockKittyContract.getAddress());
+      // Create another zombie by attacking and winning
+      let ownerZombies = await zombieOwnership.getZombiesByOwner(owner.address);
+      for (let i = 0; i < 30 && ownerZombies.length === 1; i++) {
+        await time.increase(86400);
+        try {
+          await zombieOwnership.attack(0, 1);
+        } catch (e) {
+          // Ignore revert if cooldown etc
+        }
+        ownerZombies = await zombieOwnership.getZombiesByOwner(owner.address);
+      }
 
-      await time.increase(86400);
-      await zombieOwnership.feedOnKitty(0, 1);
-
-      const ownerZombies = await zombieOwnership.getZombiesByOwner(owner.address);
       expect(ownerZombies.length).to.equal(2);
     });
   });

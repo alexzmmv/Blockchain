@@ -3,53 +3,65 @@ import { ethers } from "hardhat";
 async function main() {
   console.log("Starting CryptoZombies deployment...\n");
 
-  // Get the deployer account
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with account:", deployer.address);
 
   const balance = await ethers.provider.getBalance(deployer.address);
   console.log("Account balance:", ethers.formatEther(balance), "ETH\n");
 
-  // Deploy ZombieOwnership (main contract that includes all functionality)
-  console.log("Deploying ZombieOwnership contract...");
+  // 1. Deploy ZombiePerks
+  console.log("Deploying ZombiePerks contract...");
+  const ZombiePerks = await ethers.getContractFactory("ZombiePerks");
+  const zombiePerks = await ZombiePerks.deploy();
+  await zombiePerks.waitForDeployment();
+  const perksAddress = await zombiePerks.getAddress();
+  console.log("✓ ZombiePerks deployed to:", perksAddress);
+
+  // 2. Deploy ZombieOwnership (main contract)
+  console.log("\nDeploying ZombieOwnership contract...");
   const ZombieOwnership = await ethers.getContractFactory("ZombieOwnership");
   const zombieOwnership = await ZombieOwnership.deploy();
-
   await zombieOwnership.waitForDeployment();
-  const contractAddress = await zombieOwnership.getAddress();
+  const mainAddress = await zombieOwnership.getAddress();
+  console.log("✓ ZombieOwnership deployed to:", mainAddress);
 
-  console.log("✓ ZombieOwnership deployed to:", contractAddress);
+  // 3. Link perks contract
+  console.log("\nLinking contracts...");
+  await zombieOwnership.setPerksContract(perksAddress);
+  console.log("✓ Perks contract linked to ZombieOwnership");
+
+  // 4. Deploy MockCryptoKitties (Sepolia has no real CryptoKitties)
+  console.log("\nDeploying MockCryptoKitties...");
+  const MockKitties = await ethers.getContractFactory("MockCryptoKitties");
+  const mockKitties = await MockKitties.deploy();
+  await mockKitties.waitForDeployment();
+  const mockKittiesAddress = await mockKitties.getAddress();
+  console.log("✓ MockCryptoKitties deployed to:", mockKittiesAddress);
+
+  await zombieOwnership.setKittyContractAddress(mockKittiesAddress);
+  console.log("✓ Kitty contract linked to ZombieOwnership");
+
   console.log("\n" + "=".repeat(60));
   console.log("Deployment Summary");
   console.log("=".repeat(60));
-  console.log("Contract:", "ZombieOwnership");
-  console.log("Address:", contractAddress);
-  console.log("Network:", (await ethers.provider.getNetwork()).name);
-  console.log("Deployer:", deployer.address);
+  console.log("ZombieOwnership:   ", mainAddress);
+  console.log("ZombiePerks:       ", perksAddress);
+  console.log("MockCryptoKitties: ", mockKittiesAddress);
+  console.log("Network:           ", (await ethers.provider.getNetwork()).name);
+  console.log("Deployer:          ", deployer.address);
   console.log("=".repeat(60) + "\n");
 
-  // Optional: Set initial configuration
-  console.log("Contract deployed successfully!");
-  console.log("\nNext steps:");
-  console.log("1. Verify contract (optional):");
-  console.log(`   npx hardhat verify --network <network> ${contractAddress}`);
-  console.log("\n2. Set CryptoKitties contract address (if needed):");
-  console.log(`   await zombieOwnership.setKittyContractAddress("0x...")`);
-  console.log("\n3. Interact with the contract:");
-  console.log(`   - Create zombie: createRandomZombie("ZombieName")`);
-  console.log(`   - Level up fee: setLevelUpFee(ethers.parseEther("0.001"))`);
+  console.log("✓ Update your .env:");
+  console.log(`  VITE_CONTRACT_ADDRESS=${mainAddress}`);
+  console.log(`  VITE_PERKS_ADDRESS=${perksAddress}`);
+  console.log(`  VITE_MOCK_KITTIES_ADDRESS=${mockKittiesAddress}`);
 
-  return contractAddress;
+  console.log("\nNext steps:");
+  console.log("1. mint a perk:  VITE_PERKS_ADDRESS=... PERK_TYPE=1 pnpm run interact:mintperk");
+  console.log("2. equip a perk: VITE_CONTRACT_ADDRESS=... VITE_PERKS_ADDRESS=... ZOMBIE_ID=0 PERK_TYPE=1 pnpm run interact:equipperk");
+  console.log("3. attack:       CONTRACT_ADDRESS=... ZOMBIE_ID=0 TARGET_ID=1 pnpm run interact:attack");
 }
 
-// Execute deployment
 main()
-  .then((address) => {
-    console.log("\n✓ Deployment completed successfully!");
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error("\n✗ Deployment failed:");
-    console.error(error);
-    process.exit(1);
-  });
+  .then(() => { console.log("\n✓ Deployment completed successfully!"); process.exit(0); })
+  .catch((error) => { console.error("\n✗ Deployment failed:", error); process.exit(1); });

@@ -45,15 +45,20 @@ contract ZombieFeeding is ZombieFactory {
     _targetDna = _targetDna % dnaModulus;
     uint256 newDna = (myZombie.dna + _targetDna) / 2;
     if (keccak256(abi.encodePacked(_species)) == keccak256(abi.encodePacked("kitty"))) {
+      // Force last 2 digits to 99 -> Kitty type
       newDna = newDna - newDna % 100 + 99;
     }
     _createZombie("NoName", newDna);
     _triggerCooldown(myZombie);
   }
 
-  function feedOnKitty(uint256 _zombieId, uint256 _kittyId) public {
-    uint256 kittyDna;
-    (,,,,,,,,,kittyDna) = kittyContract.getKitty(_kittyId);
-    feedAndMultiply(_zombieId, kittyDna, "kitty");
+  function feedOnKitty(uint256 _zombieId, uint256 /*_kittyId*/) public {
+    Zombie storage myZombie = zombies[_zombieId];
+    require(msg.sender == zombieToOwner[_zombieId], "Not your zombie");
+    require(_isReady(myZombie), "Zombie is on cooldown");
+    
+    // Absorb kitty status directly without spawning a baby
+    myZombie.dna = myZombie.dna - (myZombie.dna % 100) + 99;
+    _triggerCooldown(myZombie);
   }
 }

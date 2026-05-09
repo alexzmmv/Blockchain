@@ -4,12 +4,13 @@ import "@nomicfoundation/hardhat-toolbox";
 // Load environment variables from .env file (optional)
 // To use: npm install --save-dev dotenv --legacy-peer-deps
 // Then uncomment the line below:
-// import "dotenv/config";
+import "dotenv/config";
 
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.24",
     settings: {
+      evmVersion: "cancun",
       optimizer: {
         enabled: true,
         runs: 200,
@@ -33,11 +34,11 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8545",
     },
 
-    // sepolia: {
-    //   url: process.env.SEPOLIA_RPC_URL || "",
-    //   accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    //   chainId: 11155111,
-    // },
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL || "",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 11155111,
+    },
 
     // mainnet: {
     //   url: process.env.MAINNET_RPC_URL || "",
@@ -46,10 +47,10 @@ const config: HardhatUserConfig = {
     // },
   },
 
-  // Etherscan verification (optional)
-  // etherscan: {
-  //   apiKey: process.env.ETHERSCAN_API_KEY || "",
-  // },
+  // Etherscan verification
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
+  },
 
   // Gas reporter (optional)
   gasReporter: {

@@ -60,7 +60,7 @@ describe("ZombieFeeding", function () {
       await zombieOwnership.connect(owner).setKittyContractAddress(newAddress);
     });
 
-    it("Should feed on kitty and create new zombie with kitty DNA", async function () {
+    it("Should feed on kitty and mutate existing zombie with kitty DNA", async function () {
       // Fast forward time to pass cooldown
       await time.increase(86400);
 
@@ -71,13 +71,12 @@ describe("ZombieFeeding", function () {
       await zombieOwnership.feedOnKitty(0, 1);
 
       const zombiesAfter = await zombieOwnership.getZombiesByOwner(owner.address);
-      expect(zombiesAfter.length).to.equal(2);
+      expect(zombiesAfter.length).to.equal(1);
 
-      const newZombie = await zombieOwnership.zombies(2);
-      expect(newZombie.name).to.equal("NoName");
+      const mutatedZombie = await zombieOwnership.zombies(0);
 
       // Kitty DNA should be processed (ending in 99)
-      const dna = newZombie.dna.toString();
+      const dna = mutatedZombie.dna.toString();
       expect(Number(dna) % 100).to.equal(99);
     });
 
