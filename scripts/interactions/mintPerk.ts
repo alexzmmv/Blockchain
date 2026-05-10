@@ -6,17 +6,17 @@ import { ethers } from "hardhat";
 
 async function main() {
   const perksAddress = process.env.PERKS_ADDRESS;
-  const perkType     = process.env.PERK_TYPE ? parseInt(process.env.PERK_TYPE) : null;
-  const recipient    = process.env.RECIPIENT; // optional, defaults to deployer
+  const perkType = process.env.PERK_TYPE ? parseInt(process.env.PERK_TYPE) : null;
+  const recipient = process.env.RECIPIENT; // optional, defaults to deployer
 
   if (!perksAddress) throw new Error("PERKS_ADDRESS environment variable not set");
   if (!perkType || perkType < 1 || perkType > 4) throw new Error("PERK_TYPE must be 1 (Fire), 2 (Water), 3 (Grass), or 4 (Kitty)");
 
-  const typeNames = ["", "🔥 Fire Essence", "💧 Water Essence", "🌿 Grass Essence", "🐱 Kitty Essence"];
+  const typeNames = ["", " Fire Essence", " Water Essence", " Grass Essence", " Kitty Essence"];
   const [signer] = await ethers.getSigners();
   const to = recipient ?? signer.address;
 
-  console.log("🎁 Minting Perk...");
+  console.log(" Minting Perk...");
   console.log(`  Perks contract: ${perksAddress}`);
   console.log(`  Perk type:      ${typeNames[perkType]}`);
   console.log(`  Recipient:      ${to}`);
