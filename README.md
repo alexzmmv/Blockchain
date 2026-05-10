@@ -361,7 +361,7 @@ cp .env.example .env
 npx hardhat run scripts/deploy.ts --network sepolia
 
 # 3. Verify on Etherscan
-CONTRACT_ADDRESS=0x... npm run verify -- --network sepolia
+npm run verify -- --network sepolia
 ```
 
 ---
@@ -406,7 +406,7 @@ console.log("Your zombies:", zombies);
 
 ```bash
 # Use the general interact script
-CONTRACT_ADDRESS=0x... npm run interact
+npm run interact
 ```
 
 This will:

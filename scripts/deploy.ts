@@ -57,9 +57,9 @@ async function main() {
   console.log(`  MOCK_KITTIES_ADDRESS=${mockKittiesAddress}`);
 
   console.log("\nNext steps:");
-  console.log("1. mint a perk:  PERKS_ADDRESS=... PERK_TYPE=1 pnpm run interact:mintperk");
-  console.log("2. equip a perk: CONTRACT_ADDRESS=... PERKS_ADDRESS=... ZOMBIE_ID=0 PERK_TYPE=1 pnpm run interact:equipperk");
-  console.log("3. attack:       CONTRACT_ADDRESS=... ZOMBIE_ID=0 TARGET_ID=1 pnpm run interact:attack");
+  console.log("1. mint a perk:  PERKS_ADDRESS=... PERK_TYPE=1 npm run interact:mintperk");
+  console.log("2. equip a perk: CONTRACT_ADDRESS=... PERKS_ADDRESS=... ZOMBIE_ID=0 PERK_TYPE=1 npm run interact:equipperk");
+  console.log("3. attack:       CONTRACT_ADDRESS=... ZOMBIE_ID=0 TARGET_ID=1 npm run interact:attack");
 }
 
 main()

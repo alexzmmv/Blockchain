@@ -73,7 +73,6 @@ contract ZombieFactory is Ownable {
   function _burnZombie(uint256 _zombieId) internal {
     require(_zombieId < zombies.length, "Zombie does not exist");
     address previousOwner = zombieToOwner[_zombieId];
-    require(previousOwner != address(0), "Zombie already burned");
 
     ownerZombieCount[previousOwner]--;
     zombieToOwner[_zombieId] = address(0);

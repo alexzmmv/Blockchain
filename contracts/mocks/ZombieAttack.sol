@@ -56,7 +56,7 @@ contract ZombieAttack is ZombieHelper {
     if (attackType == TYPE_WATER && defenseType == TYPE_GRASS)  modifier_ -= 20;
 
     // Kitty attacker: never suffers a disadvantage + flat +5%
-    if (attackType == TYPE_KITTY) {
+    if (getZombieType(_attackerId) == TYPE_KITTY) {
       if (modifier_ < 0) modifier_ = 0;
       modifier_ += 5;
     }
