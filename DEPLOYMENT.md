@@ -2,6 +2,26 @@
 
 This guide covers deploying the CryptoZombies smart contracts to different networks.
 
+## 🎮 Game Rules & Features Reference
+
+### Level Requirements
+| Action | Min Level | Cost |
+|--------|-----------|------|
+| Create Zombie | 1 | Free |
+| Level Up | Any | 0.001 ETH |
+| Change Name | 2+ | Free |
+| Mutate DNA | 20+ | Free |
+| Battle | Any | Free |
+| Equip Perk | Any | Free |
+
+### DNA & Zombie Types
+- Zombie type determined by **last 2 digits** of 16-digit DNA
+- Types: Fire 🔥 (00-32) | Water 💧 (33-65) | Grass 🌿 (66-98) | Kitty 🐱 (99)
+- Type advantages: Fire > Grass > Water > Fire
+- Perks (1-4) boost battle win probability
+
+---
+
 ## Environment Variables
 
 Your deployment configuration is controlled by the `.env` file at the root of the project.

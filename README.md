@@ -53,11 +53,15 @@ CryptoZombies is an educational Solidity project that teaches smart contract dev
 ### Core Gameplay
 
 - **Create Zombies**: Generate unique zombies with DNA-based attributes
-- **Battle System**: Fight other zombies with 70% win probability
-- **Breeding**: Create new zombies by feeding on others
-- **Level System**: Level up zombies with experience points
-- **Customization**: Change zombie names (level 2+) and DNA (level 20+)
-- **CryptoKitties Integration**: Feed your zombie on CryptoKitties
+- **Battle System**: Fight other zombies with elemental type advantages (Fire > Grass > Water > Fire)
+- **Breeding**: Create new zombies by feeding on others or devouring Kitties
+- **Level System**: Level up zombies to unlock features (0.001 ETH per level-up)
+- **Customization**: 
+  - Change zombie names (level 2+, free)
+  - Mutate DNA (level 20+, free) — change appearance and elemental type
+- **Elemental Types**: Fire 🔥 | Water 💧 | Grass 🌿 | Kitty 🐱 (determined by last 2 DNA digits)
+- **Perk System**: Equip elemental perks (1-4) to boost battle stats
+- **CryptoKitties Integration**: Feed your zombie on CryptoKitties to absorb Kitty DNA
 
 ### Smart Contract Features
 
@@ -88,6 +92,24 @@ CryptoZombies is an educational Solidity project that teaches smart contract dev
 - **Mocha**: Test framework
 - **Hardhat Network Helpers**: Time manipulation & testing utilities
 - **55 comprehensive tests** covering all functionality
+
+---
+
+## 🧬 DNA & Type System Quick Reference
+
+**Zombie elemental type is determined by the last 2 digits of DNA:**
+
+| Range | Type | Notes |
+|-------|------|-------|
+| 00-32 | 🔥 Fire | Beats Grass |
+| 33-65 | 💧 Water | Beats Fire |
+| 66-98 | 🌿 Grass | Beats Water |
+| 99 | 🐱 Kitty | Legendary type, special mechanics |
+
+**Example DNA values:**
+- `1234567890120005` → Fire (ends in 05)
+- `9876543210134567` → Water (ends in 67)
+- `1111111111111299` → Kitty (ends in 99)
 
 ---
 
@@ -144,8 +166,12 @@ npm run deploy:local     # Deploy to local node
 npm run interact         # Interact with deployed contract (general)
 npm run interact:create  # Create a new zombie
 npm run interact:get     # View your zombies
-npm run interact:levelup # Level up a zombie
-npm run interact:changename # Change zombie name
+npm run interact:levelup # Level up a zombie (0.001 ETH)
+npm run interact:changename # Change zombie name (level 2+)
+npm run interact:changedna # Mutate DNA (level 20+)
+npm run interact:attack  # Battle another zombie
+npm run interact:equipPerk # Equip elemental perk
+npm run interact:getStats # View detailed zombie stats
 npm run setup            # Configure deployed contract
 npm run verify           # Verify on Etherscan
 ```
